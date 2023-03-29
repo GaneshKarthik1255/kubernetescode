@@ -1,37 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kubernetescode
+  creationTimestamp: null
   labels:
-    app: kubernetescode
+    app: flaskdemo
+  name: flaskdemo
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: kubernetescode
+      app: flaskdemo
+  strategy: {}
   template:
     metadata:
+      creationTimestamp: null
       labels:
-        app: kubernetescode
+        app: flaskdemo
     spec:
       containers:
-      - name: kubernetescode
-        image: ganeshkarthik/test:latest
-        ports:
-        - containerPort: 3000
-        
-        
+      - image: ganeshkarthik/test:6
+        name: flaskdemo
+        resources: {}
+status: {}
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: kubernetescode
+  name: lb-service
+  labels:
+    app: lb-service
 spec:
-  selector:
-    app: kubernetescode
-  type: NodePort
+  type: LoadBalancer
   ports:
-  - port: 3000
-    protocol: TCP
-    nodePort: 31110
+  - port: 80
+    targetPort: 5000
+  selector:
+    app: flaskdemo
