@@ -27,8 +27,12 @@ node {
         }
     }
     
-    stage('Trigger ManifestUpdate') {
-                echo "triggering updatemanifestjob"
-                build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+      stage('Deploying App to Kubernetes') {
+      steps {
+        script {
+          kubernetesDeploy(configs: "deploymentservice.yaml", kubeconfigId: "kubernetes")
         }
+      }
+    }
+
 }
